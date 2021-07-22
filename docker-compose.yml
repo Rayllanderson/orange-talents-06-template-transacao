@@ -55,6 +55,16 @@ services:
       COLLECTOR_ZIPKIN_HTTP_PORT: 9411
     networks:
       - transacoes-network
+
+  postgres:
+    image: 'postgres:alpine'
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: transaction
+      POSTGRES_PASSWORD: 12345
+    networks:
+      - transacoes-network
 networks:
   transacoes-network:
     driver: bridge

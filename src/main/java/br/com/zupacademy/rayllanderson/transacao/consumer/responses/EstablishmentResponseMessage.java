@@ -1,8 +1,9 @@
-package br.com.zupacademy.rayllanderson.transacao.kafka.consumer.responses;
+package br.com.zupacademy.rayllanderson.transacao.consumer.responses;
 
+import br.com.zupacademy.rayllanderson.transacao.transaction.models.Establishment;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class EstablishmentResponse {
+public class EstablishmentResponseMessage {
 
     @JsonProperty("nome")
     private String name;
@@ -12,10 +13,10 @@ public class EstablishmentResponse {
     private String address;
 
     @Deprecated
-    private EstablishmentResponse() {
+    private EstablishmentResponseMessage() {
     }
 
-    public EstablishmentResponse(String name, String city, String address) {
+    public EstablishmentResponseMessage(String name, String city, String address) {
         this.name = name;
         this.city = city;
         this.address = address;
@@ -31,5 +32,9 @@ public class EstablishmentResponse {
 
     public String getAddress() {
         return address;
+    }
+
+    public Establishment toModel(){
+        return new Establishment(this.name, this.city, this.address);
     }
 }

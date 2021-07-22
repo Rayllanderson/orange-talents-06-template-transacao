@@ -1,6 +1,6 @@
-package br.com.zupacademy.rayllanderson.transacao.kafka.consumer.config;
+package br.com.zupacademy.rayllanderson.transacao.consumer.config;
 
-import br.com.zupacademy.rayllanderson.transacao.kafka.consumer.responses.TransactionMessage;
+import br.com.zupacademy.rayllanderson.transacao.consumer.responses.TransactionMessage;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
