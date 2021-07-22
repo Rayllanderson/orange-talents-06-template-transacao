@@ -1,0 +1,60 @@
+version: '3'
+services:
+
+  zookeeper:
+    image: "confluentinc/cp-zookeeper:5.2.1"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_SYNC_LIMIT: 2
+    networks:
+      - transacoes-network
+
+  kafka:
+    image: "confluentinc/cp-kafka:5.2.1"
+    ports:
+      - 9092:9092
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: "1"
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    networks:
+      - transacoes-network
+
+  transacoes:
+    image: 'zupacademy/transacoes'
+    ports:
+      - 7777:7777
+    depends_on:
+      - kafka
+    environment:
+      SERVER_PORT: 7777
+      LOG_LEVEL: INFO
+      KAFKA_HOST: "kafka:29092"
+      JAEGER_ENDPOINT: http://jaeger:14268/api/traces
+    networks:
+      - transacoes-network
+
+  jaeger:
+    image: jaegertracing/all-in-one
+    ports:
+      - 5775:5775/udp
+      - 6831:6831/udp
+      - 6832:6832/udp
+      - 5778:5778
+      - 16686:16686
+      - 14268:14268
+      - 14250:14250
+      - 9411:9411
+    environment:
+      COLLECTOR_ZIPKIN_HTTP_PORT: 9411
+    networks:
+      - transacoes-network
+networks:
+  transacoes-network:
+    driver: bridge
